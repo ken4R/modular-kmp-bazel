@@ -1,5 +1,5 @@
 pluginManagement {
-    // Convention plugins: one per module type. See build-logic/README.md.
+    // Convention plugins: one per module type. AGENTS.md lists them.
     includeBuild("build-logic")
     repositories {
         google {
