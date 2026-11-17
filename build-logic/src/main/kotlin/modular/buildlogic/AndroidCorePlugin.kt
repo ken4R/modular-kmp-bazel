@@ -11,31 +11,33 @@ import org.gradle.api.Project
  */
 class AndroidCorePlugin : Plugin<Project> {
 
-    override fun apply(target: Project) = with(target) {
-        pluginManager.apply("com.android.library")
-        pluginManager.apply("org.jetbrains.kotlin.plugin.compose")
+    override fun apply(target: Project) {
+        with(target) {
+            pluginManager.apply("com.android.library")
+            pluginManager.apply("org.jetbrains.kotlin.plugin.compose")
 
-        extensions.configure(LibraryExtension::class.java) {
-            namespace = moduleNamespace
-            compileSdk = libs.intVersion("android-compileSdk")
-            defaultConfig {
-                minSdk = libs.intVersion("android-minSdk")
+            extensions.configure(LibraryExtension::class.java) {
+                namespace = moduleNamespace
+                compileSdk = libs.intVersion("android-compileSdk")
+                defaultConfig {
+                    minSdk = libs.intVersion("android-minSdk")
+                }
+                compileOptions {
+                    sourceCompatibility = JavaVersion.VERSION_17
+                    targetCompatibility = JavaVersion.VERSION_17
+                }
+                buildFeatures {
+                    compose = true
+                }
+                testOptions {
+                    // Local tests run against the same SDK level as the application.
+                    targetSdk = libs.intVersion("android-targetSdk")
+                }
             }
-            compileOptions {
-                sourceCompatibility = JavaVersion.VERSION_17
-                targetCompatibility = JavaVersion.VERSION_17
-            }
-            buildFeatures {
-                compose = true
-            }
-            testOptions {
-                // Local tests run against the same SDK level as the application.
-                targetSdk = libs.intVersion("android-targetSdk")
-            }
+
+            addComposeDependencies()
+            registerModuleRulesCheck()
         }
-
-        addComposeDependencies()
-        registerModuleRulesCheck()
     }
 }
 

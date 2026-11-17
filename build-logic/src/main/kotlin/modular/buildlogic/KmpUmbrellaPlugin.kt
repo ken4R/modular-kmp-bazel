@@ -20,26 +20,28 @@ const val SHARED_FRAMEWORK_NAME = "Shared"
  */
 class KmpUmbrellaPlugin : Plugin<Project> {
 
-    override fun apply(target: Project) = with(target) {
-        pluginManager.apply(KmpCorePlugin::class.java)
-        pluginManager.apply("co.touchlab.skie")
+    override fun apply(target: Project) {
+        with(target) {
+            pluginManager.apply(KmpCorePlugin::class.java)
+            pluginManager.apply("co.touchlab.skie")
 
-        extensions.configure(KotlinMultiplatformExtension::class.java) {
-            val xcframework = XCFramework(SHARED_FRAMEWORK_NAME)
-            targets.withType(KotlinNativeTarget::class.java).configureEach {
-                binaries.framework {
-                    baseName = SHARED_FRAMEWORK_NAME
-                    // Static: Kotlin is linked once into the app, and Bazel and SPM import the same file.
-                    isStatic = true
-                    binaryOption("bundleId", "$BASE_PACKAGE.shared")
-                    xcframework.add(this)
+            extensions.configure(KotlinMultiplatformExtension::class.java) {
+                val xcframework = XCFramework(SHARED_FRAMEWORK_NAME)
+                targets.withType(KotlinNativeTarget::class.java).configureEach {
+                    binaries.framework {
+                        baseName = SHARED_FRAMEWORK_NAME
+                        // Static: Kotlin is linked once into the app, and Bazel and SPM import the same file.
+                        isStatic = true
+                        binaryOption("bundleId", "$BASE_PACKAGE.shared")
+                        xcframework.add(this)
+                    }
                 }
             }
-        }
 
-        extensions.configure(SkieExtension::class.java) {
-            // Build data stays on the developer's machine.
-            analytics.disableUpload.set(true)
+            extensions.configure(SkieExtension::class.java) {
+                // Build data stays on the developer's machine.
+                analytics.disableUpload.set(true)
+            }
         }
     }
 }

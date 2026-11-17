@@ -12,13 +12,15 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
  */
 class KmpFeaturePlugin : Plugin<Project> {
 
-    override fun apply(target: Project) = with(target) {
-        pluginManager.apply(KmpCorePlugin::class.java)
+    override fun apply(target: Project) {
+        with(target) {
+            pluginManager.apply(KmpCorePlugin::class.java)
 
-        extensions.configure(KotlinMultiplatformExtension::class.java) {
-            sourceSets.commonMain.dependencies {
-                // `api`: the ViewModel base class is part of what a feature exposes.
-                api(libs.library("androidx-lifecycle-viewmodel"))
+            extensions.configure(KotlinMultiplatformExtension::class.java) {
+                sourceSets.commonMain.dependencies {
+                    // `api`: the ViewModel base class is part of what a feature exposes.
+                    api(libs.library("androidx-lifecycle-viewmodel"))
+                }
             }
         }
     }
