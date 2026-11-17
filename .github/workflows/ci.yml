@@ -74,10 +74,20 @@ jobs:
       - name: Build Shared.xcframework
         run: tools/shared/sync
 
+      # The Bazel test runner reuses one simulator, named after its device type and iOS version,
+      # and creates it with this same tool when it is missing. Its first boot takes minutes on a
+      # new runner, more than a test timeout: it happens here, before the tests.
+      - name: Boot the simulator of the iOS tests
+        run: |
+          id="$(bazel run @rules_apple//apple/testing/default_runner:simulator_creator -- \
+            --device-type "$IOS_SIMULATOR" \
+            --sdk-version "$(xcrun --sdk iphonesimulator --show-sdk-version)")"
+          echo "IOS_SIMULATOR_ID=${id:?the simulator creator printed no id}" >> "$GITHUB_ENV"
+
       # Builds every iOS target, the application included, runs the unit tests and checks
       # that the generated Package.swift files are current.
       - name: Build and test iOS with Bazel
-        run: bazel test //ios/...
+        run: bazel test //ios/... --@rules_apple//apple/build_settings:ios_simulator_device="$IOS_SIMULATOR"
 
       - name: Generate the Xcode project
         run: bazel run //ios:xcodeproj
@@ -85,4 +95,4 @@ jobs:
       # The same modules, built as Swift packages the way Xcode does.
       - name: Build and test the Login module as a Swift package
         working-directory: ios/Features/Login
-        run: xcodebuild test -scheme Login -destination "platform=iOS Simulator,name=$IOS_SIMULATOR"
+        run: xcodebuild test -scheme Login -destination "id=$IOS_SIMULATOR_ID"

@@ -46,6 +46,7 @@ Le modèle est `Features/Login`.
 
 - XCTest, dans `Tests/<Nom>Tests/`. Ils pilotent le vrai ViewModel partagé : voir `LoginViewTests`.
 - `bazel test //ios/Features/Login:LoginTests`, ou `bazel test //ios/...` pour tout.
+- Les tests tournent dans un simulateur réutilisé d'un lancement à l'autre, `BAZEL_TEST_<appareil>_<version d'iOS>`. Bazel le crée au premier lancement, et son premier démarrage peut prendre plusieurs minutes. L'appareil se choisit avec `--@rules_apple//apple/build_settings:ios_simulator_device="iPhone 17"`.
 
 ## Xcode
 
