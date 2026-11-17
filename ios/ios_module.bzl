@@ -28,6 +28,13 @@ IOS_MINIMUM_OS_VERSION = "17.0"
 # through the application and the test bundles, which switch to iOS.
 IOS_ONLY = ["@platforms//os:ios"]
 
+# Visibility of the targets that the Xcode project of //ios lists. rules_xcodeproj reads them from a
+# package it generates in another repository, which its `generated` package group covers.
+XCODE_PROJECT_VISIBILITY = [
+    "//ios:__pkg__",
+    "@rules_xcodeproj//xcodeproj:generated",
+]
+
 _FEATURES_DIRECTORY = "ios/Features/"
 
 def ios_module(name, deps = [], xcframeworks = {}, visibility = None):
@@ -109,8 +116,7 @@ def ios_module(name, deps = [], xcframeworks = {}, visibility = None):
         ios_unit_test(
             name = tests,
             minimum_os_version = IOS_MINIMUM_OS_VERSION,
-            # The Xcode project of //ios lists the tests.
-            visibility = ["//ios:__pkg__"],
+            visibility = XCODE_PROJECT_VISIBILITY,
             deps = [":" + tests + "Library"],
         )
 
