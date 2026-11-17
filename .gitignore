@@ -1,4 +1,4 @@
-# Gradle et Kotlin
+# Gradle and Kotlin
 .gradle/
 .kotlin/
 build/
@@ -6,12 +6,12 @@ local.properties
 
 # Bazel
 /bazel-*
-MODULE.bazel.lock
+.bazelrc.user
 
-# Framework partagé : produit par tools/shared/sync, jamais versionné
+# Shared framework: built by tools/shared/sync, never committed
 /ios/SharedKit/Frameworks/
 
-# Xcode et SwiftPM
+# Xcode and SwiftPM
 *.xcodeproj/
 *.xcworkspace/
 xcuserdata/
@@ -20,7 +20,7 @@ DerivedData/
 .build/
 Package.resolved
 
-# Éditeurs et système
+# Editors and system
 .idea/
 *.iml
 .vscode/
