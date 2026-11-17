@@ -9,7 +9,9 @@ agp = "9.3.1"
 skie = "0.10.16"
 
 # Android SDK levels. minSdk is a prototype default: the real value is an open decision.
-android-compileSdk = "36"
+# compileSdk follows the AndroidX libraries: Compose 1.12 and Lifecycle 2.11 require 37.
+# targetSdk changes runtime behavior, so it moves on its own, and Robolectric must support it.
+android-compileSdk = "37"
 android-targetSdk = "36"
 android-minSdk = "26"
 
