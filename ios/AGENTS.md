@@ -31,6 +31,7 @@ ios_module(
 - Sources dans `Sources/<Nom>/`, tests dans `Tests/<Nom>Tests/`.
 - `BUILD.bazel` fait foi. `Package.swift` en est généré : `bazel run //ios/Features/<Nom>:package_swift`. `bazel test` échoue quand il n'est plus à jour.
 - Une feature n'est visible que de `//ios/App` : Bazel refuse qu'une feature en importe une autre.
+- Les bibliothèques Swift se construisent pour iOS seulement. Sur le Mac, `bazel test //ios/...` les construit à travers l'application et les tests, jamais pour macOS. Une `swift_library` écrite à la main, comme celle de `App`, porte `target_compatible_with = IOS_ONLY`.
 
 ## Écrire une vue
 

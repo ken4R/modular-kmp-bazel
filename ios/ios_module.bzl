@@ -23,6 +23,11 @@ load(":package_manifest.bzl", "package_manifest")
 # Oldest iOS version the application and every module support.
 IOS_MINIMUM_OS_VERSION = "17.0"
 
+# Constraint of every target that compiles for iOS. Bazel runs on a Mac, so `bazel test //ios/...`
+# skips these targets as top-level targets instead of building them for macOS. They are built
+# through the application and the test bundles, which switch to iOS.
+IOS_ONLY = ["@platforms//os:ios"]
+
 _FEATURES_DIRECTORY = "ios/Features/"
 
 def ios_module(name, deps = [], xcframeworks = {}, visibility = None):
@@ -67,6 +72,7 @@ def ios_module(name, deps = [], xcframeworks = {}, visibility = None):
         if framework_files:
             apple_static_xcframework_import(
                 name = framework,
+                target_compatible_with = IOS_ONLY,
                 xcframework_imports = framework_files,
                 visibility = ["//visibility:private"],
             )
@@ -74,6 +80,7 @@ def ios_module(name, deps = [], xcframeworks = {}, visibility = None):
             _missing_xcframework(
                 name = framework,
                 path = package + "/" + path,
+                target_compatible_with = IOS_ONLY,
                 visibility = ["//visibility:private"],
             )
         framework_targets.append(":" + framework)
@@ -82,6 +89,7 @@ def ios_module(name, deps = [], xcframeworks = {}, visibility = None):
         name = name,
         srcs = native.glob(["Sources/%s/**/*.swift" % name]),
         module_name = name,
+        target_compatible_with = IOS_ONLY,
         visibility = visibility,
         deps = deps + framework_targets,
     )
@@ -94,6 +102,7 @@ def ios_module(name, deps = [], xcframeworks = {}, visibility = None):
             testonly = True,
             srcs = test_sources,
             module_name = tests,
+            target_compatible_with = IOS_ONLY,
             visibility = ["//visibility:private"],
             deps = [":" + name],
         )

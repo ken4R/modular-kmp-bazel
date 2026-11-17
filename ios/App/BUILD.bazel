@@ -1,6 +1,6 @@
 load("@rules_apple//apple:ios.bzl", "ios_application")
 load("@rules_swift//swift:swift_library.bzl", "swift_library")
-load("//ios:ios_module.bzl", "IOS_MINIMUM_OS_VERSION")
+load("//ios:ios_module.bzl", "IOS_MINIMUM_OS_VERSION", "IOS_ONLY")
 
 # The application assembles the features and owns navigation. It is the only target that may
 # depend on a feature.
@@ -8,6 +8,7 @@ swift_library(
     name = "AppLibrary",
     srcs = glob(["Sources/**/*.swift"]),
     module_name = "ModularApp",
+    target_compatible_with = IOS_ONLY,
     deps = [
         "//ios/Core/DesignSystem",
         "//ios/Features/Login",
